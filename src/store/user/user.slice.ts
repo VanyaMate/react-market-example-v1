@@ -1,10 +1,7 @@
 import { createSlice, Draft, PayloadAction } from '@reduxjs/toolkit';
 import localStorageConfig from '../../configs/local-storage.config.ts';
-import {
-    IUser,
-    IUserSlice,
-} from './user.interfaces.ts';
-
+import { IUserSlice } from './user.interface.ts';
+import { IUser } from '../../services/user/user.interface.ts';
 
 const initialState: IUserSlice = {
     user: null,

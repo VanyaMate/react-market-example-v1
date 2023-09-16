@@ -1,0 +1,1 @@
+export const NO_VALID_DATA = 'No valid data';

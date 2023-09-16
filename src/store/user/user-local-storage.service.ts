@@ -3,16 +3,19 @@ import {
     IUser,
     UpdateUserDto,
 } from './user.interfaces.ts';
-import { IService } from '../.interfaces.ts';
+import { ISearchOptions, IService } from '../.interfaces.ts';
 import localStorageConfig from '../../configs/local-storage.config.ts';
 
 
 export interface IUserService extends IService<IUser, CreateUserDto, UpdateUserDto> {
+    loading: boolean;
+
     getCurrentUser (): Promise<IUser | null>;
 }
 
 export class UserLocalStorageService implements IUserService {
     private readonly users: IUser[] = [];
+    public loading: boolean         = false;
 
     constructor () {
         const storage: string | null = localStorage.getItem(localStorageConfig.usersLocalStorage);
@@ -22,6 +25,7 @@ export class UserLocalStorageService implements IUserService {
     }
 
     create (createDto: CreateUserDto): Promise<IUser> {
+        this.loading = true;
         return new Promise(async (resolve, reject) => {
             const { login, password } = createDto;
             const user: IUser | null  = await this.findOne(createDto.login);
@@ -38,13 +42,15 @@ export class UserLocalStorageService implements IUserService {
                 this._save(this.users);
 
                 setTimeout(() => {
+                    this.loading = false;
                     resolve(user);
-                }, 600);
+                }, 1600);
             }
         });
     }
 
     delete (login: string): Promise<boolean> {
+        this.loading = true;
         return new Promise(async (resolve) => {
             let deleted: boolean = false;
 
@@ -59,12 +65,14 @@ export class UserLocalStorageService implements IUserService {
             }
 
             setTimeout(() => {
+                this.loading = false;
                 resolve(deleted);
-            }, 600);
+            }, 1600);
         });
     }
 
     findOne (login: string): Promise<IUser | null> {
+        this.loading = true;
         return new Promise((resolve) => {
             let user: IUser | null = null;
 
@@ -77,25 +85,18 @@ export class UserLocalStorageService implements IUserService {
             }
 
             setTimeout(() => {
+                this.loading = false;
                 resolve(user);
-            }, 300);
+            }, 1300);
         });
     }
 
-    findMany (data: Partial<IUser>): Promise<IUser[]> {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                const keys: string[] = Object.keys(data);
-                const users: IUser[] = this.users.filter((user) => {
-                    return keys.every((key) => user[key] === data[key]);
-                });
-
-                resolve(users);
-            }, 500);
-        });
+    findMany (_d: Partial<IUser>, _: ISearchOptions<IUser>): Promise<IUser[]> {
+        return Promise.resolve(this.users);
     }
 
-    update (data: UpdateUserDto): Promise<boolean> {
+    update (data: UpdateUserDto): Promise<IUser | null> {
+        this.loading = true;
         return new Promise((resolve) => {
             setTimeout(async () => {
                 const user: IUser | null = await this.findOne(data.login);
@@ -103,19 +104,23 @@ export class UserLocalStorageService implements IUserService {
                     for (let i = 0; i < this.users.length; i++) {
                         const currentUser: IUser = this.users[i];
                         if (currentUser.login === data.login) {
-                            this.users.splice(i, 1, {
+                            const newUserData: IUser = {
                                 ...currentUser,
                                 ...data,
-                            });
+                            };
+                            this.users.splice(i, 1, newUserData);
                             this._save(this.users);
-                            resolve(true);
+                            this.loading = false;
+                            resolve(newUserData);
                             break;
                         }
                     }
-                    resolve(false);
+                    this.loading = false;
+                    resolve(null);
                 }
-                resolve(false);
-            }, 500);
+                this.loading = false;
+                resolve(null);
+            }, 1500);
         });
     }
 
@@ -124,9 +129,16 @@ export class UserLocalStorageService implements IUserService {
     }
 
     getCurrentUser (): Promise<IUser | null> {
+        this.loading = true;
         return new Promise(async (resolve) => {
             const currentLogin: string | null = localStorage.getItem(localStorageConfig.currentUserLocalStorage);
-            resolve(currentLogin ? await this.findOne(currentLogin) : null);
+            const user: IUser | null          = currentLogin
+                                                ? await this.findOne(currentLogin)
+                                                : null;
+            setTimeout(() => {
+                this.loading = false;
+                resolve(user);
+            }, 1000);
         });
     }
 }

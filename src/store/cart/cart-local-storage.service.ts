@@ -1,5 +1,6 @@
 import { CreateCartDto, ICart, UpdateCartDto } from './cart.interfaces.ts';
-import { IService } from '../.interfaces.ts';
+import { ISearchOptions, IService } from '../.interfaces.ts';
+import localStorageConfig from '../../configs/local-storage.config.ts';
 
 
 export interface ICartService extends IService<ICart, CreateCartDto, UpdateCartDto> {
@@ -7,26 +8,82 @@ export interface ICartService extends IService<ICart, CreateCartDto, UpdateCartD
 }
 
 export class CartLocalStorageService implements ICartService {
-    create (data: CreateCartDto): Promise<ICart> {
-        return Promise.resolve(undefined);
+    private readonly carts: ICart[] = [];
+
+    constructor () {
+        const storage: string | null = localStorage.getItem(localStorageConfig.cartsLocalStorage);
+        if (storage) {
+            this.carts = JSON.parse(storage);
+        }
     }
 
-    delete (data: string): Promise<boolean> {
-        return Promise.resolve(false);
+    create (createCartDto: CreateCartDto): Promise<ICart> {
+        return new Promise<ICart>(async (resolve) => {
+            const existedCart: ICart | null = await this.findOne(createCartDto.userLogin);
+            if (existedCart) {
+                resolve(existedCart);
+            } else {
+                const cart: ICart = {
+                    userLogin: createCartDto.userLogin,
+                    products : [],
+                };
+                this.carts.push(cart);
+                this._save(this.carts);
+                resolve(cart);
+            }
+        });
     }
 
-    findMany (data: Partial<ICart>): Promise<ICart[]> {
-        return Promise.resolve([]);
+    delete (userLogin: string): Promise<boolean> {
+        return new Promise(async (resolve) => {
+            for (let i = 0; i < this.carts.length; i++) {
+                const cart: ICart = this.carts[i];
+                if (cart.userLogin === userLogin) {
+                    this.carts.splice(i, 1);
+                    this._save(this.carts);
+                    resolve(true);
+                }
+            }
+
+            resolve(false);
+        });
     }
 
-    findOne (data: string): Promise<ICart | null> {
-        return Promise.resolve(undefined);
+    findMany (_d: Partial<ICart>, _s: ISearchOptions<ICart>): Promise<ICart[]> {
+        return Promise.resolve(this.carts);
     }
 
-    update (data: UpdateCartDto): Promise<boolean> {
-        return Promise.resolve(false);
+    findOne (userLogin: string): Promise<ICart | null> {
+        return new Promise((resolve) => {
+            for (let i = 0; i < this.carts.length; i++) {
+                const cart: ICart = this.carts[i];
+                if (cart.userLogin === userLogin) {
+                    resolve(cart);
+                }
+            }
+
+            resolve(null);
+        });
     }
 
+    update (data: UpdateCartDto): Promise<ICart | null> {
+        return new Promise((resolve) => {
+            for (let i = 0; i < this.carts.length; i++) {
+                const cart: ICart = this.carts[i];
+                if (cart.userLogin === data.userLogin) {
+                    cart.products = data.products;
+                    this._save(this.carts);
+                    resolve(cart);
+                }
+            }
+
+            resolve(null);
+        });
+    }
+
+    private _save (carts: ICart[]): void {
+        localStorage.setItem(localStorageConfig.cartsLocalStorage, JSON.stringify(carts));
+    }
 }
 
 export default new CartLocalStorageService();

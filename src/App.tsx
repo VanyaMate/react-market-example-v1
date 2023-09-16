@@ -1,9 +1,22 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IProduct } from './services/product/product.interface.ts';
 import productDummyService from './services/product/product-dummy.service.ts';
 import { Category } from './services/category/category.interface.ts';
 import categoryService from './services/category/category.service.ts';
 
+
+const Product: React.FC<IProduct> = (product: IProduct) => {
+    return (
+        <div>
+            <img style={ { width: '130px', height: '130px' } }
+                 src={ product.thumbnail }/>
+            <p>{ product.category }</p>
+            <h2>{ product.title }</h2>
+            <p>{ product.description }</p>
+            <h3>{ product.price } $</h3>
+        </div>
+    );
+};
 
 const App = () => {
     const [ product, setProduct ]                   = useState<IProduct | null>(null);
@@ -20,7 +33,7 @@ const App = () => {
         productDummyService.getProducts({
             limit : 10,
             offset: 0,
-            select: [ 'title', 'price' ],
+            select: [ 'title', 'price', 'images', 'thumbnail', 'description' ],
         })
             .then((data) => setProducts(data.products));
 
@@ -56,23 +69,21 @@ const App = () => {
             <hr/>
             <h2>product</h2>
             {
-                product ?
-                <div>product: { product.title } [{ product.price } rub]</div>
-                        : ''
+                product
+                ? <Product { ...product }/>
+                : ''
             }
             <hr/>
             <h2>products</h2>
             {
-                products.map((product) =>
-                    <div
-                        key={ product.id }>product: { product.title } [{ product.price } rub]</div>)
+                products.map((product) => <Product
+                    key={ product.id } { ...product }/>)
             }
             <hr/>
             <h2>search products</h2>
             {
-                searchProducts.map((product) =>
-                    <div
-                        key={ product.id }>product: { product.title } [{ product.price } rub]</div>)
+                searchProducts.map((product) => <Product
+                    key={ product.id } { ...product }/>)
             }
 
             <hr/>
@@ -86,9 +97,8 @@ const App = () => {
             </ul>
             <h2>category products</h2>
             {
-                categoryProducts.map((product) =>
-                    <div
-                        key={ product.id }>product: { product.title } [{ product.price } rub]</div>)
+                categoryProducts.map((product) => <Product
+                    key={ product.id } { ...product }/>)
             }
         </div>
     );

@@ -5,7 +5,12 @@ export class CategoryService implements ICategoryService {
     private readonly apiUrl: string = 'https://dummyjson.com/products/categories';
 
     getAll (): Promise<Category[]> {
-        return fetch(this.apiUrl).then((response) => response.json());
+        return new Promise(async (resolve) => {
+            const list: string [] = await fetch(this.apiUrl).then((response) => response.json());
+            setTimeout(() => {
+                resolve(list);
+            }, 1500);
+        });
     }
 }
 

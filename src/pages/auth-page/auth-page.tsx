@@ -1,11 +1,16 @@
-
-import React from 'react';
+import authLocalStorageService
+    from '@/services/auth/auth-local-storage.service.ts';
+import AuthForm from '@/components/forms/auth-form/auth-form.tsx';
 
 
 const AuthPage = () => {
     return (
         <div>
-            AuthPage
+            <AuthForm
+                authService={ authLocalStorageService }
+                onLogin={ (data) => console.log(data) }
+                onErrorLogin={ (message) => console.log('Error', message) }
+            />
         </div>
     );
 };

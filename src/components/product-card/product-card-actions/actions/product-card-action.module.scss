@@ -1,0 +1,19 @@
+.action {
+    width         : 100%;
+    display       : block;
+    padding       : 10px;
+    border-radius : 10px;
+
+    &:hover {
+        background : #F2F6FA;
+    }
+
+    &:active {
+        background : #F4F8FC;
+    }
+
+    svg {
+        width  : 20px;
+        height : 20px;
+    }
+}

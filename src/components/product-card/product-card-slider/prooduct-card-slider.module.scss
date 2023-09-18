@@ -1,0 +1,17 @@
+.container {
+    width  : 100%;
+    height : 250px;
+
+    .slide {
+        height        : 100%;
+        border-radius : 5px;
+
+        img {
+            border-radius : 5px;
+        }
+
+        &.empty {
+
+        }
+    }
+}

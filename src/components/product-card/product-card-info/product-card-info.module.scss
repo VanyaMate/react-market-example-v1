@@ -1,0 +1,11 @@
+.container {
+    padding         : 15px;
+    display         : flex;
+    justify-content : space-between;
+    flex-direction  : column;
+
+    .price {
+        font-size   : 20px;
+        font-weight : bold;
+    }
+}

@@ -1,10 +1,7 @@
-import React from 'react';
-
-
 const ProductPage = () => {
     return (
         <div>
-            ProductPage
+            ProductPage ProductPage ProductPage
         </div>
     );
 };

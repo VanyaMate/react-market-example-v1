@@ -8,18 +8,30 @@ import CartPage from '@/pages/cart-page/cart-page.tsx';
 import ProductPage from '@/pages/product-page/product-page.tsx';
 import ProductsPage from '@/pages/products-page/products-page.tsx';
 import Page404 from '@/pages/404-page/page404.tsx';
+import categoryService from '@/services/category/category.service.ts';
 
 
 const App = () => {
     return (
         <div className={ css.container }>
+            <Routes>
+                <Route path={ '/products/:category' }
+                       element={
+                           <Header
+                               categoryService={ categoryService }
+                           />
+                       }
+                />
+                <Route path={ '*' }
+                       element={
+                           <Header
+                               categoryService={ categoryService }
+                           />
+                       }
+                />
+            </Routes>
             <div className={ css.content }>
                 <div className={ css.top }>
-                    <Routes>
-                        <Route path={ '/products/:category' }
-                               element={ <Header/> }/>
-                        <Route path={ '*' } element={ <Header/> }/>
-                    </Routes>
                     <Routes>
                         <Route path={ '/' } element={ <HomePage/> }/>
                         <Route path={ '/auth' } element={ <AuthPage/> }/>

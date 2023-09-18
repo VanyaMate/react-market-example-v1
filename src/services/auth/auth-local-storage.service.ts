@@ -59,11 +59,15 @@ export class AuthLocalStorageService implements IAuthService {
     }
 
     register (login: string, password: string): Promise<IAuthData> {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             setTimeout(async () => {
                 const privateUser: IPrivateUser | null = this.userDatabase.get(login);
-                if (privateUser && (privateUser.passport === password)) {
-                    resolve(await this._getUserAuthData(privateUser));
+                if (privateUser) {
+                    if (privateUser.passport === password) {
+                        resolve(await this._getUserAuthData(privateUser));
+                    } else {
+                        reject(NO_VALID_DATA);
+                    }
                 }
 
                 const user: IPrivateUser = this.userDatabase.create(login, password);

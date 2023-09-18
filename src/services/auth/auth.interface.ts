@@ -8,9 +8,9 @@ export interface IAuthData {
 }
 
 export interface IAuthService {
-    login (login: string, password: string): Promise<IAuthData>;
+    login (login: string, password: string, remember?: boolean): Promise<IAuthData>;
 
-    register (login: string, password: string): Promise<IAuthData>;
+    register (login: string, password: string, remember?: boolean): Promise<IAuthData>;
 
     refresh (): Promise<IAuthData>;
 

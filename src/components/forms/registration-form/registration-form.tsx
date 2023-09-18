@@ -7,7 +7,7 @@ import FormContainer from '@/components/forms/form-container.tsx';
 type RegistrationFormType = {
     login?: string;
     password?: string;
-    remember?: string;
+    remember?: boolean;
 }
 
 
@@ -21,7 +21,7 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = (props) => {
     const [ loading, setLoading ] = useState<boolean>(false);
     const onFinish                = useCallback((data: Required<RegistrationFormType>) => {
         setLoading(true);
-        props.authService.register(data.login, data.password)
+        props.authService.register(data.login, data.password, data.remember)
             .then(props.onLogin)
             .catch(props.onError)
             .finally(() => setLoading(false));

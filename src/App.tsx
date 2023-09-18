@@ -9,9 +9,21 @@ import ProductPage from '@/pages/product-page/product-page.tsx';
 import ProductsPage from '@/pages/products-page/products-page.tsx';
 import Page404 from '@/pages/404-page/page404.tsx';
 import categoryService from '@/services/category/category.service.ts';
+import { useAuthRefresh } from '@/hooks/use-auth-refresh.ts';
+import authLocalStorageService
+    from '@/services/auth/auth-local-storage.service.ts';
+import { useActions } from '@/hooks/redux/useActions.ts';
 
 
 const App = () => {
+    const { user } = useActions();
+
+    useAuthRefresh({
+        authService: authLocalStorageService,
+        onLogin    : (data) => user.setUser(data.user),
+        onError    : (message) => console.log('Error refresh', message),
+    });
+
     return (
         <div className={ css.container }>
             <Routes>

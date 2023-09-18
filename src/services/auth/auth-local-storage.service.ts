@@ -20,11 +20,14 @@ export class AuthLocalStorageService implements IAuthService {
                  private readonly cartDatabase: CartLocalStorageDatabaseService) {
     }
 
-    login (login: string, password: string): Promise<IAuthData> {
+    login (login: string, password: string, remember: boolean = false): Promise<IAuthData> {
         return new Promise((resolve, reject) => {
             setTimeout(async () => {
                 const privateUser: IPrivateUser | null = this.userDatabase.get(login);
                 if (privateUser && (privateUser.passport === password)) {
+                    if (remember) {
+                        this.authDatabase.set(login);
+                    }
                     resolve(await this._getUserAuthData(privateUser));
                 }
 
@@ -58,12 +61,15 @@ export class AuthLocalStorageService implements IAuthService {
         });
     }
 
-    register (login: string, password: string): Promise<IAuthData> {
+    register (login: string, password: string, remember: boolean = false): Promise<IAuthData> {
         return new Promise((resolve, reject) => {
             setTimeout(async () => {
                 const privateUser: IPrivateUser | null = this.userDatabase.get(login);
                 if (privateUser) {
                     if (privateUser.passport === password) {
+                        if (remember) {
+                            this.authDatabase.set(login);
+                        }
                         resolve(await this._getUserAuthData(privateUser));
                     } else {
                         reject(NO_VALID_DATA);
@@ -71,6 +77,9 @@ export class AuthLocalStorageService implements IAuthService {
                 }
 
                 const user: IPrivateUser = this.userDatabase.create(login, password);
+                if (remember) {
+                    this.authDatabase.set(login);
+                }
                 resolve(await this._getUserAuthData(user));
             }, 1500);
         });

@@ -7,7 +7,7 @@ import FormContainer from '@/components/forms/form-container.tsx';
 type LoginFormType = {
     login?: string;
     password?: string;
-    remember?: string;
+    remember?: boolean;
 }
 
 
@@ -21,7 +21,7 @@ const LoginForm: React.FC<ILoginFormProps> = (props) => {
     const [ loading, setLoading ] = useState<boolean>(false);
     const onFinish                = useCallback((data: Required<LoginFormType>) => {
         setLoading(true);
-        props.authService.login(data.login, data.password)
+        props.authService.login(data.login, data.password, data.remember)
             .then(props.onLogin)
             .catch(props.onError)
             .finally(() => setLoading(false));

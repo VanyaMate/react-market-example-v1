@@ -1,10 +1,13 @@
 import localStorageDatabaseService, {
     LocalStorageDatabaseService,
     LocalStorageItem,
-} from './local-storage-database.service.ts';
+} from '../local-storage-database.service.ts';
+import {
+    IAuthStorageService,
+} from '@/services/storage/auth/auth-local-storage-database.interface.ts';
 
 
-export class AuthLocalStorageDatabaseService {
+export class AuthLocalStorageDatabaseService implements IAuthStorageService {
     constructor (private readonly storage: LocalStorageDatabaseService) {
     }
 
@@ -18,6 +21,7 @@ export class AuthLocalStorageDatabaseService {
     }
 
     set (login: string): void {
+        console.log('set', login);
         this.storage.set<string>(LocalStorageItem.CURRENT_USER, [ login ]);
     }
 }

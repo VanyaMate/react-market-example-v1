@@ -5,10 +5,14 @@ import { RadioChangeEvent } from 'antd/es/radio/interface';
 import LoginForm from '@/components/forms/login-form/login-form.tsx';
 import RegistrationForm
     from '@/components/forms/registration-form/registration-form.tsx';
+import {
+    IAuthStorageService,
+} from '@/services/storage/auth/auth-local-storage-database.interface.ts';
 
 
 export interface IAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
     authService: IAuthService;
+    authStorageService: IAuthStorageService;
     onLogin: (data: IAuthData) => void;
     onErrorLogin: (message: string) => void;
 }
@@ -44,11 +48,13 @@ const AuthForm: React.FC<IAuthFormProps> = (props) => {
                 registration
                 ? <RegistrationForm
                     authService={ props.authService }
+                    authStorageService={ props.authStorageService }
                     onLogin={ props.onLogin }
                     onError={ props.onErrorLogin }
                 />
                 : <LoginForm
                     authService={ props.authService }
+                    authStorageService={ props.authStorageService }
                     onLogin={ props.onLogin }
                     onError={ props.onErrorLogin }
                 />

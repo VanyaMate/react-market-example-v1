@@ -10,7 +10,7 @@ export interface IAuthData {
 export interface IAuthService {
     login (login: string, password: string, remember?: boolean): Promise<IAuthData>;
 
-    register (login: string, password: string, remember?: boolean): Promise<IAuthData>;
+    registration (login: string, password: string, remember?: boolean): Promise<IAuthData>;
 
     refresh (): Promise<IAuthData>;
 

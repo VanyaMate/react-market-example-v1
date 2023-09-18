@@ -2,6 +2,9 @@ import { Button, Checkbox, Divider, Form, Input } from 'antd';
 import { IAuthData, IAuthService } from '@/services/auth/auth.interface.ts';
 import React, { useCallback, useState } from 'react';
 import FormContainer from '@/components/forms/form-container.tsx';
+import {
+    IAuthStorageService,
+} from '@/services/storage/auth/auth-local-storage-database.interface.ts';
 
 
 type RegistrationFormType = {
@@ -12,7 +15,8 @@ type RegistrationFormType = {
 
 
 export interface IRegistrationFormProps {
-    authService: IAuthService,
+    authService: IAuthService;
+    authStorageService: IAuthStorageService;
     onLogin: (data: IAuthData) => void;
     onError: (message: string) => void;
 }
@@ -21,8 +25,15 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = (props) => {
     const [ loading, setLoading ] = useState<boolean>(false);
     const onFinish                = useCallback((data: Required<RegistrationFormType>) => {
         setLoading(true);
-        props.authService.register(data.login, data.password, data.remember)
+        props.authService.registration(data.login, data.password)
             .then(props.onLogin)
+            .then(() => {
+                if (data.remember) {
+                    props.authStorageService.set(data.login);
+                } else {
+                    props.authStorageService.reset();
+                }
+            })
             .catch(props.onError)
             .finally(() => setLoading(false));
     }, [ props.authService ]);
@@ -55,8 +66,9 @@ const RegistrationForm: React.FC<IRegistrationFormProps> = (props) => {
                 </Form.Item>
 
                 <Form.Item<RegistrationFormType>
-                    label={ 'remember' }
+                    valuePropName={ 'checked' }
                     name={ 'remember' }
+                    wrapperCol={ { offset: 8, span: 16 } }
                 >
                     <Checkbox>Запомнить меня</Checkbox>
                 </Form.Item>

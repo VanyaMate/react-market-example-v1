@@ -1,0 +1,24 @@
+.container {
+    .button {
+        display         : flex;
+        justify-content : center;
+        align-items     : center;
+
+        &:hover {
+            .icon {
+                svg {
+                    color : #4096FF;
+                }
+            }
+        }
+
+        .icon {
+            svg {
+                transition : .2s;
+                color      : #777;
+                width      : 18px;
+                height     : 18px;
+            }
+        }
+    }
+}

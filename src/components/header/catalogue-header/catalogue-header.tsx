@@ -2,18 +2,16 @@ import React, { useMemo } from 'react';
 import { Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
 
 
 export interface ICatalogueHeader {
     categories: string[];
     loading: boolean;
     selected: string;
+    onSelect: (catalogue: string) => void;
 }
 
 const CataloguesHeader: React.FC<ICatalogueHeader> = (props) => {
-    const navigate = useNavigate();
-
     const items = useMemo<MenuProps['items']>(() => {
         return props.categories.map((catalogue) => {
             return {
@@ -28,7 +26,7 @@ const CataloguesHeader: React.FC<ICatalogueHeader> = (props) => {
         return {
             items  : items,
             onClick: (item) => {
-                navigate('/products/' + item.key);
+                props.onSelect(item.key);
             },
         };
     }, [ items ]);

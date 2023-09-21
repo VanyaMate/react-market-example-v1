@@ -1,7 +1,8 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { IProduct } from '@/services/product/product.interface.ts';
-import productDummyService from '@/services/product/product-dummy.service.ts';
+import productDummyService
+    from '@/services/product/local-data/product-local-data.service.ts';
 import Product from '@/components/product-card/product-card.tsx';
 import css from './products-page.module.scss';
 

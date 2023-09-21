@@ -1,7 +1,7 @@
-import { Category, ICategoryService } from './category.interface.ts';
+import { Category, ICategoryService } from '../category.interface.ts';
 
 
-export class CategoryService implements ICategoryService {
+export class CategoryDummyService implements ICategoryService {
     private readonly apiUrl: string = 'https://dummyjson.com/products/categories';
 
     getAll (): Promise<Category[]> {
@@ -14,4 +14,4 @@ export class CategoryService implements ICategoryService {
     }
 }
 
-export default new CategoryService();
+export default new CategoryDummyService();

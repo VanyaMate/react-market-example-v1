@@ -3,8 +3,8 @@ import {
     IProduct,
     IProductService, ProductSearchOptions,
     SearchOptions,
-} from './product.interface.ts';
-import { Category } from '../category/category.interface.ts';
+} from '../product.interface.ts';
+import { Category } from '../../category/category.interface.ts';
 
 
 export class ProductDummyService implements IProductService {

@@ -8,7 +8,8 @@ import CartPage from '@/pages/cart-page/cart-page.tsx';
 import ProductPage from '@/pages/product-page/product-page.tsx';
 import ProductsPage from '@/pages/products-page/products-page.tsx';
 import Page404 from '@/pages/404-page/page404.tsx';
-import categoryService from '@/services/category/category.service.ts';
+import categoryService
+    from '@/services/category/local-data/category-local-data.service.ts';
 import { useAuthRefresh } from '@/hooks/use-auth-refresh.ts';
 import authLocalStorageService
     from '@/services/auth/auth-local-storage.service.ts';

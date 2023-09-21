@@ -76,12 +76,13 @@ export class ProductLocalDataService implements IProductService {
     }
 
     getProducts (options: SearchOptions<IProduct>): Promise<IMultiplyResponse<IProduct>> {
+        const randomInt = Math.floor(Math.random() * 10);
         return new Promise((resolve) => {
             resolve({
                 limit   : 10,
                 offset  : 0,
                 total   : this.products.length,
-                products: this.products.slice(0, 10).map((product) => productLocalDataToProduct(product)),
+                products: this.products.slice(randomInt, randomInt + 10).map((product) => productLocalDataToProduct(product)),
             });
         });
     }

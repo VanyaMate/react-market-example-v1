@@ -5,6 +5,11 @@
     display         : flex;
     justify-content : space-between;
     flex-direction  : column;
+    transition      : .1s;
+
+    &:hover {
+        box-shadow : 0 1px 3px 0 rgba(0, 0, 0, .2);
+    }
 
     .top {
         .image {

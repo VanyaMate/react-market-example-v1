@@ -1,8 +1,13 @@
 .container {
-    padding         : 15px;
+    padding         : 10px 20px;
     display         : flex;
     justify-content : space-between;
     flex-direction  : column;
+
+    .id {
+        display   : block;
+        font-size : 12px;
+    }
 
     .price {
         font-size   : 20px;

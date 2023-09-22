@@ -16,6 +16,12 @@ const ProductCardInfo: React.FC<IProductCardInfoProps> = (props) => {
     return (
         <div className={ css.container }>
             <div>
+                <Typography.Text
+                    type={ 'secondary' }
+                    className={ css.id }
+                >
+                    id: { props.productId }
+                </Typography.Text>
                 <Rate value={ props.rating }/>
                 <Typography.Title level={ 4 }>
                     <Link

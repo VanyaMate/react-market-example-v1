@@ -11,7 +11,7 @@ const ProductsPage = () => {
     const params                    = useParams<{ category: string }>();
     const [ products, setProducts ] = useState<IProduct[]>([]);
     const [ _loading, setLoading ]  = useState<boolean>(false);
-    const [ searchParams ]          = useSearchParams<{ search: string }>();
+    const [ searchParams ]          = useSearchParams();
 
     useEffect(() => {
         setLoading(true);

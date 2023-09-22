@@ -8,6 +8,7 @@ import { Category } from '@/services/category/category.interface.ts';
 import productList_1 from './data/products-1.json';
 import productList_2 from './data/products-2.json';
 import { productLocalDataToProduct } from '@/mappers/product.mapper.ts';
+import { NO_VALID_DATA } from '@/configs/errors.config.ts';
 
 
 export interface IProductLocalData {
@@ -48,41 +49,60 @@ export class ProductLocalDataService implements IProductService {
     }
 
     getByCategory (category: Category, options: SearchOptions<IProduct>): Promise<IMultiplyResponse<IProduct>> {
+        const limit: number                 = options.limit ?? 10;
+        const offset: number                = options.offset ?? 0;
+        const products: IProductLocalData[] = this.products
+            .filter((product) => product.category === category);
         return new Promise((resolve) => {
             resolve({
-                limit   : 10,
-                offset  : 0,
-                total   : this.products.length,
-                products: this.products.slice(0, 10).map((product) => productLocalDataToProduct(product)),
+                limit   : limit,
+                offset  : offset,
+                total   : products.length,
+                products: products
+                    .slice(offset, offset + limit)
+                    .map((product) => productLocalDataToProduct(product)),
             });
         });
     }
 
     getBySearch (where: ProductSearchOptions, options: SearchOptions<IProduct>): Promise<IMultiplyResponse<IProduct>> {
+        const limit: number                 = options.limit ?? 10;
+        const offset: number                = options.offset ?? 0;
+        const products: IProductLocalData[] = this.products
+            .filter((product) => product.product_name.includes(where.title));
         return new Promise((resolve) => {
             resolve({
-                limit   : 10,
-                offset  : 0,
-                total   : this.products.length,
-                products: this.products.slice(0, 10).map((product) => productLocalDataToProduct(product)),
+                limit   : limit,
+                offset  : offset,
+                total   : products.length,
+                products: products
+                    .slice(offset, offset + limit)
+                    .map((product) => productLocalDataToProduct(product)),
             });
         });
     }
 
     getProduct (id: number): Promise<IProduct> {
-        return new Promise((resolve) => {
-            resolve(productLocalDataToProduct(this.products[0]));
+        return new Promise((resolve, reject) => {
+            for (let i = 0; i < this.products.length; i++) {
+                const product: IProductLocalData = this.products[i];
+                if (product.barcode === id) {
+                    resolve(productLocalDataToProduct(product));
+                }
+            }
+            reject(NO_VALID_DATA);
         });
     }
 
     getProducts (options: SearchOptions<IProduct>): Promise<IMultiplyResponse<IProduct>> {
-        const randomInt = Math.floor(Math.random() * 10);
+        const limit: number  = options.limit ?? 10;
+        const offset: number = options.offset ?? 0;
         return new Promise((resolve) => {
             resolve({
-                limit   : 10,
-                offset  : 0,
+                limit   : limit,
+                offset  : offset,
                 total   : this.products.length,
-                products: this.products.slice(randomInt, randomInt + 10).map((product) => productLocalDataToProduct(product)),
+                products: this.products.slice(offset, offset + limit).map((product) => productLocalDataToProduct(product)),
             });
         });
     }

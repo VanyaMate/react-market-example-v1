@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { IProduct } from '@/services/product/product.interface.ts';
 import productDummyService
@@ -11,6 +11,7 @@ const ProductsPage = () => {
     const params                    = useParams<{ category: string }>();
     const [ products, setProducts ] = useState<IProduct[]>([]);
     const [ _loading, setLoading ]  = useState<boolean>(false);
+    const [ searchParams ]          = useSearchParams<{ search: string }>();
 
     useEffect(() => {
         setLoading(true);
@@ -21,10 +22,17 @@ const ProductsPage = () => {
                 .then((data) => setProducts(data.products))
                 .finally(() => setLoading(false));
         } else {
-            productDummyService
-                .getProducts({ limit: 20 })
-                .then((data) => setProducts(data.products))
-                .finally(() => setLoading(false));
+            const search: string | null = searchParams.get('search');
+            if (search) {
+                productDummyService.getBySearch({ title: search }, { limit: 20 })
+                    .then((data) => setProducts(data.products))
+                    .finally(() => setLoading(false));
+            } else {
+                productDummyService
+                    .getProducts({ limit: 20 })
+                    .then((data) => setProducts(data.products))
+                    .finally(() => setLoading(false));
+            }
         }
     }, [ params ]);
 

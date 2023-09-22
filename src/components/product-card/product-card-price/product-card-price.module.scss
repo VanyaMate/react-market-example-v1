@@ -1,0 +1,25 @@
+.container {
+    .currency {
+        font-size     : 16px;
+        padding-right : 5px;
+    }
+
+    .discount {
+        font-size   : 20px;
+        font-weight : bold;
+        color       : red;
+    }
+
+    .withDiscount {
+        display     : inline-flex;
+        align-items : center;
+        padding     : 5px;
+        background  : red;
+        color       : #FFF;
+    }
+
+    .price {
+        font-size   : 24px;
+        font-weight : bold;
+    }
+}

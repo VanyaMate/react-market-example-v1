@@ -51,6 +51,7 @@ const ProductCard: React.FC<IProductProps> = (props) => {
                     description={ props.product.description }
                     rating={ props.product.rating }
                     price={ props.product.price }
+                    discount={ props.product.discountPercentage }
                 />
             </div>
             <div className={ css.bottom }>

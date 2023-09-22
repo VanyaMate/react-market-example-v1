@@ -2,6 +2,8 @@ import React from 'react';
 import { Rate, Typography } from 'antd';
 import css from './product-card-info.module.scss';
 import { Link } from 'react-router-dom';
+import ProductCardPrice
+    from '@/components/product-card/product-card-price/product-card-price.tsx';
 
 
 export interface IProductCardInfoProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -9,6 +11,7 @@ export interface IProductCardInfoProps extends React.HTMLAttributes<HTMLDivEleme
     rating: number;
     title: string;
     price: number;
+    discount: number;
     description: string;
 }
 
@@ -36,9 +39,11 @@ const ProductCardInfo: React.FC<IProductCardInfoProps> = (props) => {
                     { props.description }
                 </Typography.Paragraph>
             </div>
-            <p className={ css.price }>
-                ${ props.price }
-            </p>
+            <ProductCardPrice
+                price={ props.price }
+                discountPercentage={ props.discount }
+                currency={ '$' }
+            />
         </div>
     );
 };
